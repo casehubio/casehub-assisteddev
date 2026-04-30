@@ -12,9 +12,9 @@ https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/PLATFORM.md
 ```
 
 **Other repo deep-dives** (fetch the relevant ones when your implementation touches their domain):
-- quarkus-ledger: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/quarkus-ledger.md`
-- quarkus-work: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/quarkus-work.md`
-- quarkus-qhorus: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/quarkus-qhorus.md`
+- casehub-ledger: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-ledger.md`
+- casehub-work: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-work.md`
+- casehub-qhorus: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-qhorus.md`
 - casehub-engine: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-engine.md`
 - claudony: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/claudony.md`
 - casehub-connectors: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-connectors.md`
@@ -31,7 +31,7 @@ type: java
 
 ## What This Project Is
 
-`casehub-assisteddev` is the AI-assisted software development **application layer** built on the CaseHub platform foundation. It is deliberately NOT part of the foundation — the foundation (casehub-engine, quarkus-qhorus, quarkus-ledger, quarkus-work) has no domain knowledge. This repo provides the software engineering domain logic on top of those primitives.
+`casehub-assisteddev` is the AI-assisted software development **application layer** built on the CaseHub platform foundation. It is deliberately NOT part of the foundation — the foundation (casehub-engine, casehub-qhorus, casehub-ledger, casehub-work) has no domain knowledge. This repo provides the software engineering domain logic on top of those primitives.
 
 **This repo owns:**
 - Capability tag definitions for the software development domain (security-review, architecture-review, style-review, test-coverage)
@@ -43,10 +43,10 @@ type: java
 - Human code review WorkItem lifecycle (SLA, delegation, form schemas for review findings)
 
 **This repo does NOT own:**
-- The trust model itself (quarkus-ledger)
-- The commitment lifecycle (quarkus-qhorus)
+- The trust model itself (casehub-ledger)
+- The commitment lifecycle (casehub-qhorus)
 - The case engine or blackboard (casehub-engine)
-- The WorkItem inbox (quarkus-work)
+- The WorkItem inbox (casehub-work)
 - Notification delivery (casehub-connectors)
 - Any foundation primitive — if you find yourself implementing something that would be useful to any domain, it belongs in the foundation, not here
 
