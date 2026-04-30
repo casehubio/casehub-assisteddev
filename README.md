@@ -10,9 +10,9 @@ AI-assisted software development application built on the [CaseHub](https://gith
 
 **Built on:**
 - `casehub-engine` — ACM orchestration (cases, bindings, blackboard)
-- `quarkus-qhorus` — Agent communication mesh (speech acts, commitments)
-- `quarkus-ledger` — Trust scoring, audit trail, GDPR compliance
-- `quarkus-work` — Human review tasks (WorkItem inbox, SLA)
+- `casehub-qhorus` — Agent communication mesh (speech acts, commitments)
+- `casehub-ledger` — Trust scoring, audit trail, GDPR compliance
+- `casehub-work` — Human review tasks (WorkItem inbox, SLA)
 - `casehub-connectors` — Notifications (Slack, Teams, email)
 
 ## Current Status
@@ -21,4 +21,4 @@ Early development. Foundation capabilities being built in parallel in the ecosys
 
 ## Platform Context
 
-This repo is part of the [casehubio ecosystem](https://github.com/casehubio/parent/blob/main/docs/PLATFORM.md). The foundation layer (casehub-engine, quarkus-qhorus, etc.) is domain-agnostic. This application layer provides the software engineering domain logic on top of those primitives.
+This repo is part of the [casehubio ecosystem](https://github.com/casehubio/parent/blob/main/docs/PLATFORM.md). The foundation layer (casehub-engine, casehub-qhorus, etc.) is domain-agnostic. This application layer provides the software engineering domain logic on top of those primitives.
