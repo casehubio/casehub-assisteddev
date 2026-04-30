@@ -8,16 +8,16 @@ The protocol asks: Does this already exist elsewhere? Is this the right repo for
 
 **Platform architecture (fetch before any implementation decision):**
 ```
-https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/PLATFORM.md
+https://raw.githubusercontent.com/casehubio/parent/main/docs/PLATFORM.md
 ```
 
 **Other repo deep-dives** (fetch the relevant ones when your implementation touches their domain):
-- casehub-ledger: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-ledger.md`
-- casehub-work: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-work.md`
-- casehub-qhorus: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-qhorus.md`
-- casehub-engine: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-engine.md`
-- claudony: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/claudony.md`
-- casehub-connectors: `https://raw.githubusercontent.com/casehubio/casehub-parent/main/docs/repos/casehub-connectors.md`
+- casehub-ledger: `https://raw.githubusercontent.com/casehubio/parent/main/docs/repos/casehub-ledger.md`
+- casehub-work: `https://raw.githubusercontent.com/casehubio/parent/main/docs/repos/casehub-work.md`
+- casehub-qhorus: `https://raw.githubusercontent.com/casehubio/parent/main/docs/repos/casehub-qhorus.md`
+- casehub-engine: `https://raw.githubusercontent.com/casehubio/parent/main/docs/repos/casehub-engine.md`
+- claudony: `https://raw.githubusercontent.com/casehubio/parent/main/docs/repos/claudony.md`
+- casehub-connectors: `https://raw.githubusercontent.com/casehubio/parent/main/docs/repos/casehub-connectors.md`
 
 ---
 
@@ -89,7 +89,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-25.jdk/Contents/Home  # Graa
 ## Work Tracking
 
 **Issue tracking:** enabled
-**GitHub repo:** casehubio/casehub-assisteddev
+**GitHub repo:** casehubio/assisteddev
 
 **Automatic behaviours (Claude follows these at all times):**
 - **Before implementation begins** — check if an active issue exists. If not, run issue-workflow Phase 1 before writing any code.
