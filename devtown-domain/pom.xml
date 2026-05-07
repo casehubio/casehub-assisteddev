@@ -10,4 +10,5 @@
   </parent>
   <artifactId>devtown-domain</artifactId>
   <name>DevTown :: Domain</name>
+  <description>Capability tags, trust dimensions, routing thresholds — pure Java domain vocabulary</description>
 </project>
