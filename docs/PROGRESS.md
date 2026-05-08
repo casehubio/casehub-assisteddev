@@ -143,3 +143,32 @@ Design decisions that produce capabilities Gastown structurally cannot match. Ea
 | **Configurability** | Deploy a different `CapabilityRegistry` implementation for stricter standards; override per-binding in CasePlanModel | Hard-coded in formula steps |
 
 **Why devtown can do this, Gastown cannot:** Gastown has no trust-based routing — GUPP assigns work to whoever is available with the matching tag. Routing policy is a concept that only makes sense when you have a trust model, an observation history, and a concept of routing uncertainty. devtown builds on `TrustGateService` (ledger ✅), `WorkerSelectionStrategy` SPI (casehub-work ✅), and the `HumanOversight` vocabulary type (DT-002). The policy layer connects all three into a coherent, configurable, auditable routing model that improves automatically as trust evidence accumulates.
+
+---
+
+### DT-006 — Trust maturity model: four phases from bootstrap to adaptive routing
+
+**Status:** Designed — Epic 2 (devtown#9)
+**Requires:** P0.2 ✅ (attestations exist to accumulate); P1.3 ⚠️ (enforcement at assignment); ledger#76 ⚠️ (Phase 3 quality floors)
+
+| | devtown | Gastown |
+|---|---|---|
+| **Cold start** | Phase 0 (bootstrap): availability routing — identical to Gastown; accumulates first attestations | GUPP — permanent bootstrap; no concept of maturity |
+| **Maturation** | Phases 0→1→2→3: automatic transitions as `minimumObservations` thresholds are crossed per capability per agent | No maturation — GUPP forever |
+| **Degradation guarantee** | System never blocks on missing trust data — always falls back to availability routing | N/A — no trust to degrade from |
+| **Phase detection** | `RoutingPolicy.isBootstrap(agentObservations)` — explicit API for routing logic to determine phase for each agent/capability pair | N/A |
+| **Phase 2 quality check** | `borderlineMargin` activates at Phase 2 — human spot-checks emerge organically as data matures | N/A |
+| **Phase 3 depth** | Per-capability quality floors (ledger#76) — agent thoroughness on security review separated from architecture review | N/A |
+
+**The four phases:**
+
+| Phase | Name | Trust data | Routing mode | `HumanOversight` trigger |
+|-------|------|-----------|-------------|--------------------------|
+| 0 | Bootstrap | None | Availability (Gastown parity) | Fleet gap only |
+| 1 | Emerging | Sparse | Threshold for mature agents, availability for new | Fleet gap only |
+| 2 | Active | Sufficient | Full threshold + borderline detection | Borderline scores + fleet gap |
+| 3 | Adaptive | Rich | Threshold + per-capability quality floors | Compliance spot-checks |
+
+**Why devtown can do this, Gastown cannot:** Gastown is permanently in Phase 0 — it has no trust model to mature. The GUPP model has no concept of "this agent now has enough history that we can trust their score." devtown starts identically to Gastown (Phase 0) and automatically improves routing as evidence accumulates. The maturity model means the architectural sophistication is always appropriate to the data that exists — no ceremony, no manual trust seeding, no configuration changes required at deployment time.
+
+**Platform pattern:** the maturity model is not devtown-specific. Any CaseHub application using trust-based routing faces the cold-start problem. The four-phase model and `minimumObservations` gate are a reusable methodology tracked for PLATFORM.md (parent#13).
