@@ -65,34 +65,34 @@ Design decisions that produce capabilities Gastown structurally cannot match. Ea
 
 ---
 
-### DT-001 — Typed vocabulary split: three types instead of a flat namespace
+### DT-001 — Typed vocabulary split: four types instead of a flat namespace
 
 **Status:** Designed — Epic 2 (devtown#9)
 **Requires:** #68 ✅ (capability-scoped trust scoring); P1.3 ⚠️ (routing enforcement)
 
 | | devtown | Gastown |
 |---|---|---|
-| **Vocabulary** | Three typed types: `ReviewDomain` (what the PR needs analysed), `AgentQualification` (what an agent is certified to execute), `HumanDecision` (formal accountability events) | Single flat string namespace — all work types, actor types, and orchestration operations in one tag space |
-| **Trust scoring** | Different scoring semantics per type: review domains scored on quality dimensions; executions on outcome; human decisions on human trust profiles | No distinction — all capability tags routed first-come-first-served within matching tag |
-| **Routing** | `ActorType`, `WorkerSelectionStrategy`, and `TrustGateService` operate per vocabulary type | Capability string matching only — no actor type constraint, no trust threshold |
+| **Vocabulary** | Four typed types: `ReviewDomain` (what the PR needs analysed), `AgentQualification` (what an agent executes with trust scoring), `HumanDecision` (formal PR accountability events), `HumanOversight` (routing confidence review) | Single flat string namespace — all work types, actor types, and orchestration operations in one tag space |
+| **Removed from vocabulary** | `NOTIFY` (connector call, not trust-scored), `BATCH_BISECT`/`COORDINATED_MERGE`/`COORDINATED_ROLLBACK` (CasePlanModel structures, not capability tags — devtown#20) | All 13 original tags in one flat list |
+| **Trust scoring** | Different scoring semantics per type: review domains scored on quality dimensions; executions on outcome; human decisions accumulate human trust profiles; human oversight triggers on routing uncertainty | No distinction — all capability tags routed first-come-first-served within matching tag |
+| **Routing** | `ActorType`, `WorkerSelectionStrategy`, `TrustGateService`, and `RoutingPolicy` operate per vocabulary type | Capability string matching only — no actor type constraint, no trust threshold, no uncertainty handling |
 
 **Why devtown can do this, Gastown cannot:** Gastown's flat namespace fits its flat trust model. GUPP means any available agent with the matching tag takes the work — splitting the vocabulary produces no benefit because the routing infrastructure cannot exploit the distinction. CaseHub's foundation provides `ActorType` discrimination, `ScoreType.CAPABILITY` per-capability trust scoring, and the `WorkerSelectionStrategy` SPI. The vocabulary split is the application-layer expression of capabilities the foundation already has.
 
 ---
 
-### DT-002 — Human review as formal accountability event, not routing constraint
+### DT-002 — Two distinct human involvement types: decision and oversight
 
 **Status:** Designed — Epic 2 (devtown#9)
 **Requires:** casehub-work ✅; HITL wiring ⚠️ (for end-to-end); qhorus#124 ⚠️ (for trust to accumulate per human persona)
 
 | | devtown | Gastown |
 |---|---|---|
-| **Model** | `HumanDecision` — first-class vocabulary type with dedicated routing mechanics, `ActorType.HUMAN` enforcement, and `casehub-work` lifecycle | `human-approval-gate` or equivalent — capability tag like any other; beads assigned to humans same as agents |
-| **Lifecycle** | `casehub-work` WorkItem: 10-status lifecycle, SLA, business hours (`BusinessCalendar` SPI), delegation, escalation, form schema | None — no differentiation between human and agent work lifecycle |
-| **Trust** | Human actors accumulate trust scores from review outcomes; senior reviewers who catch what agents miss earn higher routing priority | No trust model for humans — stamps human-curated, not outcome-derived |
-| **Compliance** | GDPR Art.22 oversight requirement met structurally — named human is formally accountable for the decision record | None |
+| **`HumanDecision`** | Formal PR accountability event — named human approves/rejects PR. `casehub-work` WorkItem lifecycle: SLA, business hours, delegation, escalation. Trust accumulates on human actors. GDPR Art.22 met structurally. | Single model: bead assigned to human same as agent — no lifecycle differentiation, no trust model for humans |
+| **`HumanOversight`** | System-level review triggered when automated routing confidence is low: agent within `borderlineMargin` of threshold, no agent meets minimum threshold, fleet capability gap detected, `minimumObservations` not reached. EU AI Act Art.12 territory. | **No equivalent** — Gastown has no trust model to be uncertain about |
+| **Distinction** | Two types serve two purposes: `HumanDecision` is a domain decision (is this PR safe to merge?); `HumanOversight` is a system decision (is this routing trustworthy?) | Undifferentiated — all human involvement is just "bead on human's hook" |
 
-**Why devtown can do this, Gastown cannot:** Gastown assigns beads to humans identically to polecats — a bead marked DONE by a human carries the same record as one marked DONE by an agent. `casehub-work`'s dedicated WorkItem lifecycle is purpose-built for human task semantics. The trust model runs identically for human and agent actors — the same `LedgerAttestation` mechanism records the outcome and feeds `TrustScoreJob`. Naming it a "gate" diminishes what is actually a formal accountability event; the vocabulary reflects its weight.
+**Why devtown can do this, Gastown cannot:** `HumanOversight` is only possible because devtown has a trust model with a concept of uncertainty. Gastown's GUPP model has no thresholds, no observation counts, no borderline detection — there is nothing to be uncertain about. `HumanDecision`'s elevated lifecycle (SLA, escalation, trust accumulation) is made possible by `casehub-work`'s purpose-built WorkItem model, which Gastown does not have. Together, these give devtown two distinct human roles that Gastown conflates into one undifferentiated assignment.
 
 ---
 
@@ -125,3 +125,21 @@ Design decisions that produce capabilities Gastown structurally cannot match. Ea
 | **Auditability** | Threshold applied to a routing decision recorded in EventLog as a case fact | N/A |
 
 **Why devtown can do this, Gastown cannot:** Gastown has no trust-based routing — GUPP means work goes to whoever is available with the matching capability. devtown builds on `TrustGateService` (casehub-ledger ✅) and `WorkerSelectionStrategy` SPI (casehub-work ✅). Making thresholds configurable artifacts avoids baking intelligence into the domain model at design time — consistent with the ACM principle that routing adapts to what is known, not what was predicted.
+
+---
+
+### DT-005 — `RoutingPolicy`: trust-aware routing with uncertainty handling and audit rationale
+
+**Status:** Designed — Epic 2 (devtown#9)
+**Requires:** P0.2 ✅ (trust scores exist); P1.3 ⚠️ (enforcement at assignment); ledger#76 ⚠️ (per-capability quality floors, additive extension)
+
+| | devtown | Gastown |
+|---|---|---|
+| **Threshold model** | `RoutingPolicy` record — `threshold`, `minimumObservations`, `borderlineMargin`, `fallbackType`, `rationale` | None — GUPP, no trust thresholds |
+| **Uncertainty handling** | `borderlineMargin` triggers `HumanOversight` when agent is within margin of threshold — routing defers to human when confidence is marginal | No concept of routing uncertainty |
+| **Credibility gate** | `minimumObservations` — a trust score from 2 attestations is noise; from 50 it is signal. New agents route to lower-stakes work first | No observation count concept — score of 0.9 from 1 event treated same as 0.9 from 100 |
+| **Fallback** | `fallbackType` — policy-defined: escalate to `HumanOversight`, route to backup capability, hold | No fallback — whoever is available gets the work |
+| **Audit** | `rationale` — why does security-review have 0.70 threshold? Captured in the policy, readable from the EventLog | No routing rationale — decisions are implicit |
+| **Configurability** | Deploy a different `CapabilityRegistry` implementation for stricter standards; override per-binding in CasePlanModel | Hard-coded in formula steps |
+
+**Why devtown can do this, Gastown cannot:** Gastown has no trust-based routing — GUPP assigns work to whoever is available with the matching tag. Routing policy is a concept that only makes sense when you have a trust model, an observation history, and a concept of routing uncertainty. devtown builds on `TrustGateService` (ledger ✅), `WorkerSelectionStrategy` SPI (casehub-work ✅), and the `HumanOversight` vocabulary type (DT-002). The policy layer connects all three into a coherent, configurable, auditable routing model that improves automatically as trust evidence accumulates.

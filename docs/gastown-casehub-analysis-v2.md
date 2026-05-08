@@ -857,9 +857,10 @@ Tracks design decisions that produce capabilities Gastown structurally cannot ma
 
 | Entry | Summary | Status |
 |-------|---------|--------|
-| DT-001 | Typed vocabulary split — `ReviewDomain`, `AgentQualification`, `HumanDecision` instead of flat namespace | Designed — Epic 2 |
-| DT-002 | Human review as formal accountability event with `casehub-work` lifecycle, trust scoring, GDPR Art.22 | Designed — Epic 2 |
+| DT-001 | Typed vocabulary split — `ReviewDomain`, `AgentQualification`, `HumanDecision`, `HumanOversight`; `NOTIFY` and CaseOperation concepts removed | Designed — Epic 2 |
+| DT-002 | Two human types: `HumanDecision` (domain accountability) + `HumanOversight` (routing confidence, EU AI Act Art.12) | Designed — Epic 2 |
 | DT-003 | Trust dimensions grounded in normative layer — `REVIEW_THOROUGHNESS`, `FALSE_POSITIVE_RATE`, `SCOPE_CALIBRATION` | Designed — Epic 2 |
 | DT-004 | Routing thresholds as configurable `RoutingPolicy` artifacts, not hard-coded constants | Designed — Epic 2 |
+| DT-005 | `RoutingPolicy` with uncertainty handling — `borderlineMargin` triggers `HumanOversight`; `minimumObservations` credibility gate; `rationale` for audit | Designed — Epic 2 |
 
 Full entries with reasoning and foundation gate dependencies: [`docs/PROGRESS.md`](PROGRESS.md)
