@@ -1,5 +1,6 @@
 # devtown Workspace
 
+**Name:** casehub-devtown
 **Project repo:** /Users/mdproctor/claude/casehub/devtown
 **Workspace type:** public
 
